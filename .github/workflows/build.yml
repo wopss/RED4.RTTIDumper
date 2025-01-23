@@ -12,12 +12,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
       - name: Add MSBuild to PATH
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v2
 
       - name: Download Premake
         shell: powershell
@@ -38,7 +38,7 @@ jobs:
           MSBuild.exe RED4.RTTIDumper.sln -v:minimal -m -property:Configuration=${{ matrix.config }}
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: RED4.RTTIDumper-${{ matrix.config }}
           path: build/${{ matrix.config }}/
