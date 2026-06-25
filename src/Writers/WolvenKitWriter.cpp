@@ -194,15 +194,15 @@ void WolvenKitWriter::Write(std::shared_ptr<Class> aClass)
     for (auto prop : aClass->props)
     {
         auto csType = GetCSType(prop->type);
-        auto name = SanitizeGeneral(prop->name.ToString());
-        name[0] = std::tolower(name[0]);
+        auto valName = SanitizeGeneral(prop->name.ToString());
+        valName[0] = std::tolower(valName[0]);
 
         if (CheckForDuplicate(prop->parent, prop))
         {
-            name += "_" + std::to_string(prop->valueOffset);
+            valName += "_" + std::to_string(prop->valueOffset);
         }
 
-        file << "\t\tprivate " << csType << " _" << name << ";" << std::endl;
+        file << "\t\tprivate " << csType << " _" << valName << ";" << std::endl;
     }
 
     file << std::endl;
@@ -395,12 +395,12 @@ void WolvenKitWriter::Flush()
     m_enumWriter << "}" << std::endl;
 }
 
-void WolvenKitWriter::Write(std::fstream& aFile, RED4ext::CBaseRTTIType* aType)
+void WolvenKitWriter::Write(std::fstream& aFile, RED4ext::rtti::IType* aType)
 {
     auto cname = aType->GetName();
     auto name = GetWolvenType(cname.ToString());
 
-    using ERTTIType = RED4ext::ERTTIType;
+    using ERTTIType = RED4ext::rtti::ERTTIType;
     switch (aType->GetType())
     {
     case ERTTIType::Fundamental:
@@ -549,8 +549,6 @@ void WolvenKitWriter::Write(std::fstream& aFile, RED4ext::CProperty* aProperty, 
         aFile << aProperty->valueOffset;
     }
 
-    auto typeName = aProperty->type->GetName();
-
     aFile << std::endl;
     aFile << "\t\t{" << std::endl;
     aFile << "\t\t\tget => GetProperty(ref " << privateName << ");" << std::endl;
@@ -570,9 +568,9 @@ std::string WolvenKitWriter::GetWolvenType(const char* aName)
     return aName;
 }
 
-std::string WolvenKitWriter::GetFixedSize(RED4ext::CBaseRTTIType* aType)
+std::string WolvenKitWriter::GetFixedSize(RED4ext::rtti::IType* aType)
 {
-    using ERTTIType = RED4ext::ERTTIType;
+    using ERTTIType = RED4ext::rtti::ERTTIType;
     switch (aType->GetType())
     {
     case ERTTIType::StaticArray:
@@ -592,13 +590,13 @@ std::string WolvenKitWriter::GetFixedSize(RED4ext::CBaseRTTIType* aType)
     }
 }
 
-std::string WolvenKitWriter::GetCSType(RED4ext::CBaseRTTIType* aType)
+std::string WolvenKitWriter::GetCSType(RED4ext::rtti::IType* aType)
 {
     auto cname = aType->GetName();
 
     auto name = GetWolvenType(cname.ToString());
 
-    using ERTTIType = RED4ext::ERTTIType;
+    using ERTTIType = RED4ext::rtti::ERTTIType;
     switch (aType->GetType())
     {
     case ERTTIType::Fundamental:
@@ -661,8 +659,8 @@ size_t WolvenKitWriter::GetOrdinalStart(std::shared_ptr<Class> aClass)
 {
     if (aClass->parent)
     {
-        auto parentName = GetWolvenType(aClass->parent->name.ToString());
-        auto elem = m_nextOrdinals.find(parentName);
+        const auto parentName = GetWolvenType(aClass->parent->name.ToString());
+        const auto elem = m_nextOrdinals.find(parentName);
         if (elem != m_nextOrdinals.end())
         {
             return elem->second;

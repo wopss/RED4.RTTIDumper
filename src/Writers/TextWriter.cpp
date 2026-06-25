@@ -302,7 +302,7 @@ void TextWriter::Write(std::fstream& aFile, const RED4ext::CBaseFunction* aFunct
 
         Write(aFile, param);
 
-        if (param != aFunction->params[aFunction->params.size - 1])
+        if (param != aFunction->params[aFunction->params.Size() - 1])
         {
             aFile << ", ";
         }

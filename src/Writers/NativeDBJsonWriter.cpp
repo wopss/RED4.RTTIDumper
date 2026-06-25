@@ -355,9 +355,9 @@ nlohmann::ordered_json NativeDBJsonWriter::ProcessType(RED4ext::CBaseFunction* a
     return obj;
 }
 
-nlohmann::ordered_json NativeDBJsonWriter::ProcessType(RED4ext::CBaseRTTIType* aType) const
+nlohmann::ordered_json NativeDBJsonWriter::ProcessType(RED4ext::rtti::IType* aType) const
 {
-    using ERTTIType = RED4ext::ERTTIType;
+    using ERTTIType = RED4ext::rtti::ERTTIType;
 
     nlohmann::ordered_json obj;
     auto name = aType->GetName().ToString();

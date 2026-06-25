@@ -101,7 +101,7 @@ public:
 private:
     nlohmann::ordered_json ProcessType(RED4ext::CProperty* aProperty, bool isArgument = false) const;
     nlohmann::ordered_json ProcessType(RED4ext::CBaseFunction* aFunction) const;
-    nlohmann::ordered_json ProcessType(RED4ext::CBaseRTTIType* aType) const;
+    nlohmann::ordered_json ProcessType(RED4ext::rtti::IType* aType) const;
 
     ClassFlags ProcessClassFlags(RED4ext::CClass::Flags aFlags) const;
     PropertyFlags ProcessPropertyFlags(RED4ext::CProperty::Flags aFlags) const;

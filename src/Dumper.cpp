@@ -13,7 +13,7 @@ void Dumper::Run(std::shared_ptr<IWriter> aWriter)
 
     aWriter->Write(m_global);
 
-    for (const auto [key, type] : m_types)
+    for (const auto type : m_types | std::views::values)
     {
         auto cls = std::dynamic_pointer_cast<Class>(type);
         if (cls)
@@ -44,28 +44,28 @@ void Dumper::Run(std::shared_ptr<IWriter> aWriter)
 
 void Dumper::CollectTypes()
 {
-    auto rtti = RED4ext::CRTTISystem::Get();
-    rtti->types.for_each([this](RED4ext::CName aName, RED4ext::CBaseRTTIType* aType) {
+    const auto rtti = RED4ext::CRTTISystem::Get();
+    rtti->types.for_each([this](RED4ext::CName aName, RED4ext::rtti::IType* aType) {
         auto typeId = aType->GetType();
         switch (typeId)
         {
-        case RED4ext::ERTTIType::Class:
+        case RED4ext::rtti::ERTTIType::Class:
         {
-            auto cls = static_cast<RED4ext::CClass*>(aType);
+            const auto cls = static_cast<RED4ext::CClass*>(aType);
             CollectType(cls);
 
             break;
         }
-        case RED4ext::ERTTIType::Enum:
+        case RED4ext::rtti::ERTTIType::Enum:
         {
-            auto enm = static_cast<RED4ext::CEnum*>(aType);
+            const auto enm = static_cast<RED4ext::CEnum*>(aType);
             CollectType(enm);
 
             break;
         }
-        case RED4ext::ERTTIType::BitField:
+        case RED4ext::rtti::ERTTIType::BitField:
         {
-            auto bit = static_cast<RED4ext::CBitfield*>(aType);
+            const auto bit = static_cast<RED4ext::CBitfield*>(aType);
             CollectType(bit);
 
             break;
@@ -95,7 +95,7 @@ void Dumper::CollectType(RED4ext::CEnum* aEnum)
     enm->name = aEnum->name;
     enm->actualSize = aEnum->actualSize;
 
-    for (uint32_t i = 0; i < aEnum->hashList.size; i++)
+    for (uint32_t i = 0; i < aEnum->hashList.Size(); i++)
     {
         Enum::Enumerator enumerator;
         enumerator.name = aEnum->hashList[i];
@@ -104,7 +104,7 @@ void Dumper::CollectType(RED4ext::CEnum* aEnum)
         enm->enumerators.emplace_back(std::move(enumerator));
     }
 
-    for (uint32_t i = 0; i < aEnum->aliasList.size; i++)
+    for (uint32_t i = 0; i < aEnum->aliasList.Size(); i++)
     {
         Enum::Enumerator enumerator;
         enumerator.name = aEnum->aliasList[i];
@@ -145,7 +145,7 @@ void Dumper::CollectType(RED4ext::CClass* aClass)
     cls->holderSize = aClass->holderSize;
     cls->flags = aClass->flags;
 
-    cls->props.reserve(aClass->props.size);
+    cls->props.reserve(aClass->props.Size());
     for (auto prop : aClass->props)
     {
         cls->props.emplace_back(prop);
@@ -210,16 +210,16 @@ void Dumper::OrderFunctions()
         return std::strcmp(aLhs->shortName.ToString(), aRhs->shortName.ToString()) < 0;
     };
 
-    std::sort(m_global.funcs.begin(), m_global.funcs.end(), comp);
+    std::ranges::sort(m_global.funcs, comp);
 
-    for (auto [key, type] : m_types)
+    for (auto type : m_types | std::views::values)
     {
-        auto cls = std::dynamic_pointer_cast<Class>(type);
+        const auto cls = std::dynamic_pointer_cast<Class>(type);
         if (!cls)
         {
             continue;
         }
 
-        std::sort(cls->funcs.begin(), cls->funcs.end(), comp);
+        std::ranges::sort(cls->funcs, comp);
     }
 }
