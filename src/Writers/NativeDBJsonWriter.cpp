@@ -86,17 +86,16 @@ NativeDBJsonWriter::NativeDBJsonWriter(const std::filesystem::path& aRootDir)
     m_primitives["CDateTime"] = PrimitiveDef::CDateTime;
     m_primitives["CGUID"] = PrimitiveDef::CGUID;
     m_primitives["CRUID"] = PrimitiveDef::CRUID;
-    //m_primitives["CRUIDRef"] = PrimitiveDef::CRUIDRef;
+    // m_primitives["CRUIDRef"] = PrimitiveDef::CRUIDRef;
     m_primitives["EditorObjectID"] = PrimitiveDef::EditorObjectID;
-    //m_primitives["GamedataLocKeyWrapper"] = PrimitiveDef::GamedataLocKeyWrapper;
+    // m_primitives["GamedataLocKeyWrapper"] = PrimitiveDef::GamedataLocKeyWrapper;
     m_primitives["MessageResourcePath"] = PrimitiveDef::MessageResourcePath;
-    //m_primitives["RuntimeEntityRef"] = PrimitiveDef::RuntimeEntityRef;
+    // m_primitives["RuntimeEntityRef"] = PrimitiveDef::RuntimeEntityRef;
     m_primitives["Variant"] = PrimitiveDef::Variant;
 }
 
 void NativeDBJsonWriter::Write(Global& aGlobal)
 {
-
     for (auto& func : aGlobal.funcs)
     {
         auto obj = ProcessType(func);
@@ -514,9 +513,9 @@ NativeDBJsonWriter::PropertyFlags NativeDBJsonWriter::ProcessPropertyFlags(RED4e
     flags.isProtected = aFlags.isProtected;
     flags.isPersistent = aFlags.isPersistent;
     flags.isReplicated = 0; // aFlags.isReplicated;
-    flags.isInline = 0; // aFlags.isInline;
-    flags.isEdit = 0; // aFlags.isEdit;
-    flags.isConst = 0; // aFlags.isConst;
+    flags.isInline = 0;     // aFlags.isInline;
+    flags.isEdit = 0;       // aFlags.isEdit;
+    flags.isConst = 0;      // aFlags.isConst;
     flags.b7 = 0;
     return flags;
 }
@@ -525,7 +524,7 @@ NativeDBJsonWriter::ArgumentFlags NativeDBJsonWriter::ProcessArgumentFlags(RED4e
 {
     NativeDBJsonWriter::ArgumentFlags flags;
 
-    flags.isConst = 0; //aFlags.isConst;
+    flags.isConst = 0; // aFlags.isConst;
     flags.isOut = aFlags.isOut;
     flags.isOptional = aFlags.isOptional;
     flags.b3 = 0;

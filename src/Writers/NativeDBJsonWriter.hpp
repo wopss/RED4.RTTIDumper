@@ -9,12 +9,14 @@ private:
     {
         Void,
         Bool,
+        // clang-format off
         Int8, Uint8,
         Int16, Uint16,
         Int32, Uint32,
         Int64, Uint64,
         Float, Double,
         String, LocalizationString, CName,
+        // clang-format on
         TweakDBID,
         NodeRef,
         DataBuffer,
@@ -23,11 +25,11 @@ private:
         CDateTime,
         CGUID,
         CRUID,
-        //CRUIDRef,
+        // CRUIDRef,
         EditorObjectID,
-        //GamedataLocKeyWrapper,
+        // GamedataLocKeyWrapper,
         MessageResourcePath,
-        //RuntimeEntityRef,
+        // RuntimeEntityRef,
         Variant
     };
 
